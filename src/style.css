@@ -1,0 +1,85 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --boolflix-dark: black;
+  --boolflix-light: white;
+  --boolflix-danger: red;
+  --boolflix-gray: #2f2f2d;
+}
+
+body {
+  background-color: rgba(37, 36, 36, 0.836);
+}
+
+.d-flex {
+  display: flex;
+}
+
+.container {
+  width: 70%;
+  margin: auto;
+  max-width: 1176px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -1rem;
+}
+
+[class^="col-"] {
+  padding: 1rem;
+}
+
+.col-12 {
+  width: 100%;
+}
+
+.col-3 {
+  width: calc(100% / 12 *3);
+}
+
+img {
+  max-width: 100%;
+}
+
+li {
+  list-style: none;
+}
+
+/* #endregion Utilitis */
+
+/* #region Media query */
+/* SM */
+@media screen and (min-width: 568px) {
+  .col-sm-6 {
+    width: 50%;
+  }
+}
+
+/* MD */
+@media screen and (min-width: 768px) {
+  .col-md-3 {
+    width: calc(100% / 12 * 4);
+  }
+}
+
+/* LG */
+@media screen and (min-width: 1024px) {
+  .col-lg-5 {
+    width: calc(100% / 12 * 3);
+  }
+}
+
+/* xl */
+@media screen and (min-width: 1200px) {
+  .col-xl-5 {
+    width: 20%;
+  }
+}
+
+/* #endregion Media query */
