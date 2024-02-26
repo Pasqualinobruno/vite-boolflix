@@ -2,6 +2,7 @@
 import axios from 'axios';
 import AppHeader from './components/AppHeader.vue';
 import Card from './components/Card.vue';
+
 export default {
   name: 'App',
   data() {
@@ -10,8 +11,7 @@ export default {
       imgNotFound: 'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg',
       baseApiFilm: 'https://api.themoviedb.org/3/search/movie?api_key=ead511db72c2f9cfe0774bbca2c0a6f0',
       baseApiSeriesTv: 'https://api.themoviedb.org/3/search/tv?api_key=ead511db72c2f9cfe0774bbca2c0a6f0',
-      //error: 'Al momento non ci son film da mostrare.',
-
+      showNoResultsMessage: false,
     }
 
   },
@@ -28,8 +28,8 @@ export default {
           this.films = response.data.results;
         })
         .catch(error => {
-          console.error(error);
-          //this.error = 'Non ci sono risultati';
+          //console.error(error);
+          this.showNoResultsMessage = true;
         })
 
     },
@@ -40,11 +40,11 @@ export default {
           //console.log(response);
           this.films = this.films.concat(response.data.results);
           //console.log(response.data.results[0].name);
-          console.log(this.films);
+          //console.log(this.films);
         })
         .catch(error => {
           console.error(error);
-          //this.error = 'Non ci sono risultati';
+          this.showNoResultsMessage = true;
         })
 
     },
@@ -57,13 +57,24 @@ export default {
       //console.log(urlSeriesTv);
       this.getFilm(urlFilm);
       this.getSeriesTv(urlSeriesTv);
-      this.error = false;
+
+      // Ritarda la verifica di showNoResultsMessage per dare il tempo alla UI di aggiornarsi
+      setTimeout(() => {
+        if (this.films.length === 0) {
+          this.showNoResultsMessage = true;
+        } else {
+          this.showNoResultsMessage = false;
+        }
+      }, 100);
+
+
 
     }
   },
   components: {
     Card,
     AppHeader
+
   }
 }
 </script>
@@ -71,7 +82,9 @@ export default {
 <template>
   <AppHeader @filter="filterResult"></AppHeader>
   <div class="container">
-    <!-- <h3 v-if="films.length === 0" style="color: rgb(255, 0, 0); margin-bottom: 1rem;">{{ error }}</h3> -->
+    <h3 v-if="showNoResultsMessage" style="color: rgb(255, 0, 0); margin-bottom: 1rem;">
+      Non ci sono risultati.
+    </h3>
   </div>
 
   <div class="container d-flex">
