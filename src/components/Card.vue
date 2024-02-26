@@ -3,8 +3,10 @@ export default {
     name: 'Card',
     data() {
         return {
+            isInfoVisible: false,
         }
     },
+
     props: {
         film: Object,
     },
@@ -32,35 +34,77 @@ export default {
             // Altrimenti, restituisci l'overview completo
             return overview;
         },
+        toggleInfo() {
+            if (this.infoTimeout) {
+                clearTimeout(this.infoTimeout); // Cancella il timeout se presente
+            }
+            this.isInfoVisible = !this.isInfoVisible;
+        },
 
+        // Aggiungi l'handler per resettare le informazioni quando il mouse esce dall'elemento card
+        resetInfo() {
+            this.isInfoVisible = false;
+        },
     }
+
+
+
 }
+
 </script>
 <template>
-    <div class="col-3 card">
-        <img :src="film.poster_path ? getImageUrl(film.poster_path) : imgNotFound" alt="">
-        <ul>
-            <li>
-                <div>Titolo: {{ film.title !== undefined && film.title !== '' ? film.title : film.name }}</div>
-            </li>
-            <li>
-                <div>Titolo originale:{{ film.original_name !== undefined && film.original_name !== '' ? film.original_name
-                    :
-                    film.original_title }}</div>
-            </li>
-            <li>Lingua originale:{{ film.original_language }} <img :src="creatFlags(film.original_language)" alt=""></li>
-            <li style="display: flex; gap: 0.25rem;">
-                Voto:
-                <p v-for="star in getStarsFromFirstDigit(film.vote_count)" :key="star">
-                    <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                </p>
-            </li>
-            <li>Overview:{{ getShortenedOverview(film.overview) }}</li>
-        </ul>
+    <div class="col-3">
+        <div class="card" @mouseover="toggleInfo" @mouseleave="resetInfo">
+            <img :src="film.poster_path ? getImageUrl(film.poster_path) : imgNotFound" alt="">
+            <ul class="info" v-show="isInfoVisible">
+                <li>
+                    <div>Titolo: {{ film.title !== undefined && film.title !== '' ? film.title : film.name }}</div>
+                </li>
+                <li>
+                    <div>Titolo originale:{{ film.original_name !== undefined && film.original_name !== '' ?
+                        film.original_name
+                        :
+                        film.original_title }}</div>
+                </li>
+                <li>Lingua originale:{{ film.original_language }} <img class="flag"
+                        :src="creatFlags(film.original_language)" alt="">
+                </li>
+                <li style="display: flex; gap: 0.25rem;">
+                    Voto:
+                    <p v-for="star in getStarsFromFirstDigit(film.vote_count)" :key="star">
+                        <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
+                    </p>
+                </li>
+                <li>Overview:{{ getShortenedOverview(film.overview) }}</li>
+            </ul>
+        </div>
     </div>
 </template>
 <style scoped>
 .card {
     color: var(--boolflix-light);
+    position: relative;
+
+
+
+
+    .flag {
+        width: 12px;
+    }
+
+    .info {
+        position: absolute;
+        background-color: var(--boolflix-dark);
+        padding: 1rem;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 1px solid var(--boolflix-light);
+
+
+    }
+
+
 }
 </style>
