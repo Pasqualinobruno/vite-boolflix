@@ -1,4 +1,5 @@
 <script >
+import { store } from './store';
 import axios from 'axios';
 import AppHeader from './components/AppHeader.vue';
 import Card from './components/Card.vue';
@@ -9,15 +10,13 @@ export default {
     return {
       films: [],
       imgNotFound: 'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg',
-      baseApiFilm: 'https://api.themoviedb.org/3/search/movie?api_key=ead511db72c2f9cfe0774bbca2c0a6f0',
-      baseApiSeriesTv: 'https://api.themoviedb.org/3/search/tv?api_key=ead511db72c2f9cfe0774bbca2c0a6f0',
-      showNoResultsMessage: false,
+      store
     }
 
   },
   mounted() {
-    this.getFilm(this.baseApiFilm),
-      this.getSeriesTv(this.baseApiSeriesTv)
+    this.getFilm(this.store.baseApiFilm),
+      this.getSeriesTv(this.store.baseApiSeriesTv)
   },
   methods: {
     getFilm(url) {
@@ -29,7 +28,7 @@ export default {
         })
         .catch(error => {
           //console.error(error);
-          this.showNoResultsMessage = true;
+          this.store.showNoResultsMessage = true;
         })
 
     },
@@ -44,15 +43,15 @@ export default {
         })
         .catch(error => {
           console.error(error);
-          this.showNoResultsMessage = true;
+          this.store.showNoResultsMessage = true;
         })
 
     },
     filterResult(data) {
       console.log('filter', data);
       const searchText = data.map(text => text.replace(/\s/g, '+')).join('+');
-      const urlFilm = `${this.baseApiFilm}&query=${searchText}&language=it-IT`;
-      const urlSeriesTv = `${this.baseApiSeriesTv}&query=${searchText}&language=it-IT`
+      const urlFilm = `${this.store.baseApiFilm}&query=${searchText}&language=it-IT`;
+      const urlSeriesTv = `${this.store.baseApiSeriesTv}&query=${searchText}&language=it-IT`
       console.log(urlFilm);
       //console.log(urlSeriesTv);
       this.getFilm(urlFilm);
@@ -61,9 +60,9 @@ export default {
       // Ritarda la verifica di showNoResultsMessage per dare il tempo alla UI di aggiornarsi
       setTimeout(() => {
         if (this.films.length === 0) {
-          this.showNoResultsMessage = true;
+          this.store.showNoResultsMessage = true;
         } else {
-          this.showNoResultsMessage = false;
+          this.store.showNoResultsMessage = false;
         }
       }, 100);
 
@@ -74,7 +73,6 @@ export default {
   components: {
     Card,
     AppHeader
-
   }
 }
 </script>
@@ -82,7 +80,7 @@ export default {
 <template>
   <AppHeader @filter="filterResult"></AppHeader>
   <div class="container">
-    <h3 v-if="showNoResultsMessage" style="color: rgb(255, 0, 0); margin-bottom: 1rem;">
+    <h3 v-if="store.showNoResultsMessage" style="color: rgb(255, 0, 0); margin-bottom: 1rem;">
       Non ci sono risultati.
     </h3>
   </div>
