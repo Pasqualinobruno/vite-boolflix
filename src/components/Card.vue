@@ -1,9 +1,11 @@
 <script>
+import { store } from '../store';
 export default {
     name: 'Card',
     data() {
         return {
             isInfoVisible: false,
+            store
         }
     },
 
@@ -55,7 +57,7 @@ export default {
 <template>
     <div class="col-3">
         <div class="card" @mouseover="toggleInfo" @mouseleave="resetInfo">
-            <img :src="film.poster_path ? getImageUrl(film.poster_path) : imgNotFound" alt="">
+            <img :src="film.poster_path ? getImageUrl(film.poster_path) : store.imgNotFound" alt="">
             <ul class="info" v-show="isInfoVisible">
                 <li>
                     <div>Titolo: {{ film.title !== undefined && film.title !== '' ? film.title : film.name }}</div>
